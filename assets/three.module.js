@@ -1,3 +1,4 @@
+
 // Polyfills
 
 if ( Number.EPSILON === undefined ) {
