@@ -7,7 +7,9 @@ var maju = false;
 var mundur = false;
 var kiri = false;
 var kanan = false;
-var kecepatanGerak = 0.1;
+var kecepatanGerak = new THREE.Vector3();
+var arahGerak = new THREE.Vector3();
+var prevTime = performance.now();
 
 //Tambah dan set posisi kamera
 var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
@@ -35,8 +37,8 @@ document.body.appendChild( renderer.domElement );
 
 
 var controls = new PointerLockControls(camera, renderer.domElement);
-controls.enableDamping = true;
-controls.dampingFactor = 0.25;
+document.addEventListener('click', function(){
+    controls.lock(), false});
 
 var keyLight = new THREE.DirectionalLight(new THREE.Color('hsl(30, 100%, 75%)'), 1.0);
 keyLight.position.set(-100, 0, 100);
@@ -121,25 +123,55 @@ document.addEventListener('keyup', onKeyUp, false);
 // }
 
 function gerakPemain(){
-    if(kanan){
-        camera.position.x -= Math.sin(camera.rotation.y - Math.PI/2) * kecepatanGerak;
+    if(controls.isLocked == true){
+        var time = performance.now();
+        var delta = (time - prevTime) / 1000;
+
+        kecepatanGerak.x -= kecepatanGerak.x * 10.0 * delta;
+        kecepatanGerak.z -= kecepatanGerak.z * 10.0 *delta;
+        
+        //set gravitasi
+        kecepatanGerak.y -= 9.8 * 100.0 * delta;
+
+        arahGerak.z = Number(maju) - Number(mundur);
+        arahGerak.x = Number(kanan) - Number(kiri);
+        arahGerak.normalize();
+
+        if(maju || mundur){
+            kecepatanGerak.z -= arahGerak.z * 50.0 * delta;
+        }
+        if(kanan || kiri){
+            kecepatanGerak.x -= arahGerak.x * 50.0 * delta;
+        }
+        controls.moveRight(-kecepatanGerak.x * delta);
+        controls.moveForward(-kecepatanGerak.z * delta);
+
+        prevTime = time;
+
     }
-    if(kiri){
-        camera.position.x += Math.sin(camera.rotation.y - Math.PI/2) * kecepatanGerak;
-    }
-    if(maju){
-        camera.position.z -= Math.cos(camera.rotation.y) * kecepatanGerak;
-        camera.position.x -= Math.sin(camera.rotation.y) * kecepatanGerak;
-    }
-    if(mundur){
-        camera.position.z += Math.cos(camera.rotation.y) * kecepatanGerak;
-        camera.position.x += Math.sin(camera.rotation.y) * kecepatanGerak;
-    }
+    // if(kanan){
+    //     camera.position.z -= Math.cos(camera.rotation.x - Math.PI/2) * kecepatanGerak;
+    //     camera.position.x -= Math.sin(camera.rotation.y - Math.PI/2) * kecepatanGerak;
+        
+    // }
+    // if(kiri){
+    //     camera.position.z += Math.cos(camera.rotation.x - Math.PI/2) * kecepatanGerak;
+    //     camera.position.x += Math.sin(camera.rotation.y - Math.PI/2) * kecepatanGerak;
+        
+    // }
+    // if(maju){
+    //     camera.position.z -= Math.cos(camera.rotation.y) * kecepatanGerak;
+    //     camera.position.x -= Math.sin(camera.rotation.y) * kecepatanGerak;
+    // }
+    // if(mundur){
+    //     camera.position.z += Math.cos(camera.rotation.y) * kecepatanGerak;
+    //     camera.position.x += Math.sin(camera.rotation.y) * kecepatanGerak;
+    // }
 }
 var animate = function () {
-    renderer.render(scene, camera);
+    requestAnimationFrame( animate );
     gerakPemain();
-	requestAnimationFrame( animate );
+    renderer.render(scene, camera);
 	// controls.update();
 	// cube.rotation.x += 0.01;
 	// cube.rotation.y += 0.01;
