@@ -66,7 +66,7 @@ var onProgress = function ( xhr ) {
 var onError = function () { };
 
 const gltfLoader = new THREE.GLTFLoader();
-  gltfLoader.load('assets/fp-grafkom (4).glb', function (gltf) {
+  gltfLoader.load('assets/fp-grafkom (4).gltf', function (gltf) {
     scene.add(gltf.scene);
 }, onProgress, onError);
 
