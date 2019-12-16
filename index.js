@@ -1,5 +1,7 @@
 
 import { PointerLockControls } from './assets/PointerLockControls.js';
+// import { MTLLoader } from './assets/MTLLoader.js';
+
 
 //inisiasi variabel
 var camera, scene, renderer, controls;
@@ -13,9 +15,9 @@ var prevTime = performance.now();
 
 //Tambah dan set posisi kamera
 var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
-camera.position.z = 0;
+camera.position.z = 4;
 camera.position.y = 1;
-camera.position.x = 3;
+camera.position.x = 0;
 
 var renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
@@ -24,7 +26,6 @@ document.body.appendChild( renderer.domElement );
 
 // var mouseEffect = new ParallaxBarrierEffect(renderer);
 // mouseEffect.setSize(window.innerWidth, window.innerHeight);
-
 
 
 
@@ -54,90 +55,38 @@ var scene = new THREE.Scene();
 scene.add(keyLight);
 scene.add(fillLight);
 scene.add(backLight);
-
-// // Instantiate a loader
-// var loader = new THREE.GLTFLoader();
-
-// // Optional: Provide a DRACOLoader instance to decode compressed mesh data
-// var dracoLoader = new THREE.DRACOLoader();
-// dracoLoader.setDecoderPath( '' );
-// loader.setDRACOLoader( dracoLoader );
-
-// // Load a glTF resource
-// loader.load(
-// 	// resource URL
-// 	'assets/trail.glb',
-// 	// called when the resource is loaded
-// 	function ( gltf ) {
-
-// 		scene.add( gltf.scene );
-
-// 		gltf.animations; // Array<THREE.AnimationClip>
-// 		gltf.scene; // THREE.Scene
-// 		gltf.scenes; // Array<THREE.Scene>
-// 		gltf.cameras; // Array<THREE.Camera>
-// 		gltf.asset; // Object
-
-// 	},
-// 	// called while loading is progressing
-// 	function ( xhr ) {
-
-// 		console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
-
-// 	},
-// 	// called when loading has errors
-// 	function ( error ) {
-
-// 		console.log( 'An error happened' );
-
-// 	}
-// );
-
-var mtlLoader = new THREE.MTLLoader();
-mtlLoader.setTexturePath('assets/');
-mtlLoader.setPath('assets/');
-mtlLoader.load('fp grafkom.mtl', function (materials) {
  
-    materials.preload();
+var onProgress = function ( xhr ) {
+    if ( xhr.lengthComputable ) {
+        var percentComplete = xhr.loaded / xhr.total * 100;
+        console.log( Math.round( percentComplete, 2 ) + '% downloaded' );
+    }
+};
+
+var onError = function () { };
+
+const gltfLoader = new THREE.GLTFLoader();
+  gltfLoader.load('assets/fp-grafkom (4).glb', function (gltf) {
+    scene.add(gltf.scene);
+}, onProgress, onError);
+
+// var mtlLoader = new THREE.MTLLoader();
+// // mtlLoader.setTexturePath('assets/');
+// // mtlLoader.setPath('assets/');
+// mtlLoader.load('assets/fp grafkom (2).mtl', function (materials) {
  
-    var objLoader = new THREE.OBJLoader();
-    objLoader.setMaterials(materials);
-    objLoader.setPath('assets/');
-    objLoader.load('fp grafkom.obj', function (object) {
+//     materials.preload();
  
-        scene.add(object);
-        object.position.y -= 0;
+//     var objLoader = new THREE.OBJLoader();
+//     objLoader.setMaterials(materials);
+//     // objLoader.setPath('assets/');
+//     objLoader.load('assets/fp grafkom (2).obj', function (object) {
+//         object.position.y -= 0;
+//         scene.add(object);
  
-    });
+//     }, onProgress, onError);
  
-});
-//       function initTexture(callback, args) {
-//         var imgSource = 'img/foto.jng';
-//         var promise = new Promise(function(resolve, reject) {
-//           var img = new Img();
-//           if (!img) {
-//             reject(new Error('Gagal membuat objek gambar'));
-//           }
-//           img.onload = function() {
-//             gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
-//             gl.bindTexture(gl.TEXTURE_2D, texture);
-//             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-//             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-//             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-//             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
-//             resolve('Sukses');
-//           }
-//           img.src = imgSource;
-//         });
-//         promise.then(function() {
-//           if (callback) {
-//             callback(args);
-//           }
-//         }, function (error) {
-//           console.log('Galat pemuatan gambar', error);
-//         });
-//       }
-//     }
+// });
 
 var onKeyDown = function(event){
     switch(event.keyCode){
@@ -234,9 +183,13 @@ function gerakPemain(){
     // }
 }
 var animate = function () {
+    
     requestAnimationFrame( animate );
     gerakPemain();
     renderer.render(scene, camera);
+    
+    
+    
 	// controls.update();
 	// cube.rotation.x += 0.01;
 	// cube.rotation.y += 0.01;
