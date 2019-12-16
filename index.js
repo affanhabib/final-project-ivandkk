@@ -67,6 +67,9 @@ var onError = function () { };
 
 const gltfLoader = new THREE.GLTFLoader();
   gltfLoader.load('assets/fp-grafkom (4).gltf', function (gltf) {
+	  if ( gltf.isMesh ) {
+		gltf.material.envMap = envMap;
+	}
     scene.add(gltf.scene);
 }, onProgress, onError);
 
