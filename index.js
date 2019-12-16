@@ -65,28 +65,28 @@ var onProgress = function ( xhr ) {
 
 var onError = function () { };
 
-// const gltfLoader = new THREE.GLTFLoader();
-//   gltfLoader.load('assets/fp-grafkom (4).gltf', function (gltf) {
-//     scene.add(gltf.scene);
-// }, onProgress, onError);
+const gltfLoader = new THREE.GLTFLoader();
+  gltfLoader.load('assets/fp-grafkom (4).gltf', function (gltf) {
+    scene.add(gltf.scene);
+}, onProgress, onError);
 
-var mtlLoader = new THREE.MTLLoader();
-// mtlLoader.setTexturePath('assets/');
-// mtlLoader.setPath('assets/');
-mtlLoader.load('assets/fp grafkom (3).mtl', function (materials) {
+// var mtlLoader = new THREE.MTLLoader();
+// // mtlLoader.setTexturePath('assets/');
+// // mtlLoader.setPath('assets/');
+// mtlLoader.load('assets/fp grafkom (3).mtl', function (materials) {
  
-    materials.preload();
+//     materials.preload();
  
-    var objLoader = new THREE.OBJLoader();
-    objLoader.setMaterials(materials);
-    // objLoader.setPath('assets/');
-    objLoader.load('assets/fp grafkom (3).obj', function (object) {
-        object.position.y -= 0;
-        scene.add(object);
+//     var objLoader = new THREE.OBJLoader();
+//     objLoader.setMaterials(materials);
+//     // objLoader.setPath('assets/');
+//     objLoader.load('assets/fp grafkom (3).obj', function (object) {
+//         object.position.y -= 0;
+//         scene.add(object);
  
-    }, onProgress, onError);
+//     }, onProgress, onError);
  
-});
+// });
 
 var onKeyDown = function(event){
     switch(event.keyCode){
