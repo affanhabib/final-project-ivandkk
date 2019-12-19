@@ -66,7 +66,7 @@ var onProgress = function ( xhr ) {
 var onError = function () { };
 
 const gltfLoader = new THREE.GLTFLoader();
-  gltfLoader.load('assets/fp grafkom warna.gltf', function (gltf) {
+  gltfLoader.load('assets/fp grafkom baru.glb', function (gltf) {
 	  if ( gltf.isMesh ) {
 		gltf.material.envMap = envMap;
 	}
